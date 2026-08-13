@@ -1,0 +1,36 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-sticky);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4) var(--spacing-6);
+  background-color: var(--bg-surface);
+  min-height: var(--header-height);
+  border-bottom: 1px solid var(--border-color-default);
+}
+
+.title {
+  color: var(--text-color-secondary);
+  font-size: var(--font-size-body-s);
+  font-weight: var(--font-weight-semibold);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.userEmail {
+  color: var(--text-color-muted);
+  font-size: var(--font-size-body-s);
+}

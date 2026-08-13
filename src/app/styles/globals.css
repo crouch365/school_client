@@ -1,0 +1,90 @@
+/* ============================================================
+   globals.css — базовые глобальные стили на токенах.
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--text-color-primary);
+  background-color: var(--bg-app);
+  font-size: var(--font-size-body);
+  font-family: var(--font-family-base);
+  line-height: var(--line-height-body);
+  min-height: 100%;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  color: var(--text-color-primary);
+  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-family-heading);
+  line-height: var(--line-height-heading);
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--border-color-focus);
+  outline-offset: 2px;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.container {
+  padding: 0 var(--spacing-4);
+  margin: 0 auto;
+  width: 100%;
+  max-width: var(--container-width-max);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--bg-surface-muted);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}

@@ -1,0 +1,10 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-h-xl);
+}

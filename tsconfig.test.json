@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "jsx": "react-jsx",
+    "types": ["jest", "node", "vite/client"],
+    "noEmit": true,
+    "verbatimModuleSyntax": false,
+    "esModuleInterop": true
+  },
+  "include": ["src"],
+  "exclude": []
+}

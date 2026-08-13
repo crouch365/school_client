@@ -1,0 +1,75 @@
+.sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--spacing-6);
+  padding: var(--spacing-5);
+  width: var(--sidebar-width);
+  height: 100vh;
+  background-color: var(--bg-surface);
+  flex-direction: column;
+  border-right: 1px solid var(--border-color-default);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: 0 var(--spacing-2);
+}
+
+.brandMark {
+  font-size: var(--font-size-h-l);
+}
+
+.brandName {
+  font-size: var(--font-size-h-m);
+  font-weight: var(--font-weight-bold);
+}
+
+.nav {
+  display: flex;
+  flex-grow: 1;
+  gap: var(--spacing-1);
+  flex-direction: column;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-body-s);
+  font-weight: var(--font-weight-medium);
+  transition: background-color var(--transition-fast);
+}
+
+.link:hover {
+  background-color: var(--bg-surface-hover);
+}
+
+.linkActive {
+  color: var(--color-accent);
+  background-color: var(--color-accent-soft);
+}
+
+.linkIcon {
+  flex-shrink: 0;
+}
+
+.userBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  padding: var(--spacing-4);
+  border: 1px solid var(--border-color-default);
+  border-radius: var(--radius-md);
+}
+
+.userName {
+  color: var(--text-color-muted);
+  font-size: var(--font-size-caption);
+  overflow-wrap: anywhere;
+}

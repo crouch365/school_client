@@ -1,0 +1,41 @@
+/* ============================================================
+   palette.css — сырые цвета (RAW). Единственный файл с HEX.
+   Никогда не использовать напрямую в компонентах,
+   только через семантические токены из themes.css.
+   ============================================================ */
+:root {
+  --palette-white: #fff;
+  --palette-slate-50: #f8fafc;
+  --palette-slate-100: #f1f5f9;
+  --palette-slate-200: #e2e8f0;
+  --palette-slate-300: #cbd5e1;
+  --palette-slate-400: #94a3b8;
+  --palette-slate-500: #64748b;
+  --palette-slate-600: #475569;
+  --palette-slate-700: #334155;
+  --palette-slate-800: #1e293b;
+  --palette-slate-900: #0f172a;
+  --palette-blue-50: #eff6ff;
+  --palette-blue-100: #dbeafe;
+  --palette-blue-200: #bfdbfe;
+  --palette-blue-400: #60a5fa;
+  --palette-blue-500: #3b82f6;
+  --palette-blue-600: #2563eb;
+  --palette-blue-700: #1d4ed8;
+  --palette-emerald-50: #ecfdf5;
+  --palette-emerald-400: #34d399;
+  --palette-emerald-500: #10b981;
+  --palette-emerald-600: #059669;
+  --palette-red-50: #fef2f2;
+  --palette-red-100: #fee2e2;
+  --palette-red-500: #ef4444;
+  --palette-red-600: #dc2626;
+  --palette-amber-50: #fffbeb;
+  --palette-amber-400: #fbbf24;
+  --palette-amber-500: #f59e0b;
+  --palette-amber-600: #d97706;
+  --palette-violet-50: #f5f3ff;
+  --palette-violet-400: #a78bfa;
+  --palette-violet-500: #8b5cf6;
+  --palette-violet-600: #7c3aed;
+}

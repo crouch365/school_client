@@ -1,0 +1,52 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "ignoreFiles": ["coverage/**/*.css", "build/**/*.css", "src/app/styles/normalize.css"],
+  "plugins": ["stylelint-order", "stylelint-declaration-strict-value"],
+  "rules": {
+    "scale-unlimited/declaration-strict-value": [
+      ["color", "background-color", "font-size", "font-weight", "font-family", "filter"],
+      {
+        "ignoreValues": ["currentColor", "unset", "inherit", "initial", "transparent"]
+      }
+    ],
+    "selector-class-pattern": [
+      "^[a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)*$",
+      {
+        "message": "Классы: kebab-case или camelCase (CSS Modules)"
+      }
+    ],
+    "order/properties-order": [
+      "all",
+      "position",
+      "top",
+      "right",
+      "bottom",
+      "left",
+      "z-index",
+      "display",
+      "flex",
+      "flex-grow",
+      "flex-shrink",
+      "flex-basis",
+      "align-items",
+      "justify-content",
+      "gap",
+      "padding",
+      "margin",
+      "width",
+      "height",
+      "color",
+      "background-color",
+      "border",
+      "border-radius",
+      "box-shadow",
+      "font-size",
+      "font-weight",
+      "font-family",
+      "line-height",
+      "text-align",
+      "transform",
+      "transition"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+.shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.content {
+  flex-grow: 1;
+  padding: var(--spacing-6);
+}
+
+@media (width <= 1024px) {
+  .content {
+    padding: var(--spacing-4);
+  }
+}

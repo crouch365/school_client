@@ -1,0 +1,69 @@
+/* ============================================================
+   components.css — компонентные токены (кнопки, инпуты,
+   карточки, модалки, бейджи). Только var() от семантики.
+   ============================================================ */
+:root {
+  /* === Auth === */
+  --login-bg: var(--palette-slate-900);
+
+  /* === Button === */
+  --button-bg-primary: var(--color-accent);
+  --button-bg-primary-hover: var(--color-accent-hover);
+  --button-bg-primary-active: var(--color-accent-active);
+  --button-text-primary: var(--color-accent-contrast);
+  --button-border-primary: transparent;
+  --button-bg-secondary: var(--bg-surface);
+  --button-bg-secondary-hover: var(--bg-surface-hover);
+  --button-text-secondary: var(--text-color-primary);
+  --button-border-secondary: var(--border-color-strong);
+  --button-bg-ghost: transparent;
+  --button-bg-ghost-hover: var(--bg-surface-muted);
+  --button-text-ghost: var(--text-color-secondary);
+  --button-border-ghost: transparent;
+  --button-bg-danger: var(--color-danger);
+  --button-bg-danger-hover: var(--color-danger);
+  --button-text-danger: var(--palette-white);
+  --button-border-danger: transparent;
+  --button-bg-disabled: var(--bg-surface-muted);
+  --button-text-disabled: var(--text-color-muted);
+
+  /* === Input === */
+  --input-bg: var(--bg-surface);
+  --input-bg-disabled: var(--bg-surface-muted);
+  --input-border: var(--border-color-default);
+  --input-border-hover: var(--border-color-strong);
+  --input-border-focus: var(--border-color-focus);
+  --input-border-error: var(--border-color-error);
+  --input-text: var(--text-color-primary);
+  --input-text-placeholder: var(--text-color-muted);
+  --input-text-error: var(--color-danger);
+  --input-radius: var(--radius-sm);
+
+  /* === Card === */
+  --card-bg: var(--bg-surface);
+  --card-border: var(--border-color-default);
+  --card-shadow: var(--shadow-card);
+  --card-shadow-hover: var(--shadow-card-hover);
+  --card-radius: var(--radius-lg);
+
+  /* === Modal === */
+  --modal-bg: var(--bg-surface);
+  --modal-border: var(--border-color-default);
+  --modal-shadow: var(--shadow-modal);
+  --modal-radius: var(--radius-lg);
+  --modal-overlay: var(--bg-overlay);
+
+  /* === Badge === */
+  --badge-bg-default: var(--bg-surface-muted);
+  --badge-text-default: var(--text-color-secondary);
+  --badge-bg-success: var(--color-success-soft);
+  --badge-text-success: var(--color-success);
+  --badge-bg-warning: var(--color-warning-soft);
+  --badge-text-warning: var(--color-warning);
+  --badge-bg-danger: var(--color-danger-soft);
+  --badge-text-danger: var(--color-danger);
+  --badge-bg-info: var(--color-info-soft);
+  --badge-text-info: var(--color-info);
+  --badge-bg-accent: var(--color-accent-soft);
+  --badge-text-accent: var(--color-accent);
+}

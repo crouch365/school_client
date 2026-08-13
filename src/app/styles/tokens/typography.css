@@ -1,0 +1,29 @@
+/* ============================================================
+   typography.css — размеры шрифтов, line-height, font-weight.
+   ============================================================ */
+:root {
+  --font-family-base: system-ui, 'Segoe UI', roboto, 'Helvetica Neue', arial,
+    sans-serif;
+  --font-family-heading: var(--font-family-base);
+  --font-family-mono: ui-monospace, 'SF Mono', menlo, consolas, monospace;
+
+  /* Font sizes */
+  --font-size-h-xxl: 2rem;
+  --font-size-h-xl: 1.75rem;
+  --font-size-h-l: 1.5rem;
+  --font-size-h-m: 1.25rem;
+  --font-size-h-s: 1.125rem;
+  --font-size-body: 1rem;
+  --font-size-body-s: 0.875rem;
+  --font-size-caption: 0.75rem;
+
+  /* Font weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Line heights */
+  --line-height-heading: 1.25;
+  --line-height-body: 1.55;
+}

@@ -1,0 +1,53 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.credentials {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.credentialsRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.credentialsRow code {
+  font-size: var(--font-size-body-s);
+  font-family: var(--font-family-mono);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  width: 100%;
+}
+
+.label {
+  color: var(--text-color-secondary);
+  font-size: var(--font-size-body-s);
+  font-weight: var(--font-weight-medium);
+}
+
+.select {
+  padding: var(--spacing-3) var(--spacing-4);
+  width: 100%;
+  color: var(--input-text);
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: var(--input-radius);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  cursor: pointer;
+}
+
+.select:focus {
+  border-color: var(--input-border-focus);
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
+  outline: none;
+}

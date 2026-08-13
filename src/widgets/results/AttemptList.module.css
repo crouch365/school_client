@@ -1,0 +1,49 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4) var(--spacing-5);
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+}
+
+.itemMain {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.itemTitle {
+  margin: 0;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+}
+
+.itemRight {
+  display: flex;
+  flex-shrink: 0;
+  align-items: flex-end;
+  gap: var(--spacing-1);
+  flex-direction: column;
+}
+
+.itemScore {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: var(--font-size-h-s);
+  font-weight: var(--font-weight-bold);
+}
+
+.itemDate {
+  color: var(--text-color-muted);
+  font-size: var(--font-size-caption);
+}

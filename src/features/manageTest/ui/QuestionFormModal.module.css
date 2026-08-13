@@ -1,0 +1,70 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.fieldset {
+  display: flex;
+  gap: var(--spacing-3);
+  padding: 0;
+  margin: 0;
+  border: none;
+  flex-direction: column;
+}
+
+.legend {
+  color: var(--text-color-secondary);
+  font-size: var(--font-size-body-s);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--spacing-1);
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.optionRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.radioLabel {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.radio {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.correctRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
+  background-color: var(--bg-surface-hover);
+  border: 1px solid var(--border-color-default);
+  border-radius: var(--radius-sm);
+}
+
+.correctLabel {
+  color: var(--text-color-secondary);
+  font-size: var(--font-size-body-s);
+  font-weight: var(--font-weight-medium);
+}
+
+.correctValue {
+  color: var(--color-accent);
+  font-size: var(--font-size-body-s);
+  font-weight: var(--font-weight-semibold);
+}

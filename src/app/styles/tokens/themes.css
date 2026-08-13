@@ -1,0 +1,96 @@
+/* ============================================================
+   themes.css — семантические маппинги цветов.
+   Светлая тема: :root, тёмная: [data-theme='dark'].
+   Называние: свойство-назначение-состояние, всё через var().
+   ============================================================ */
+:root {
+  color-scheme: light;
+
+  /* === Фоны === */
+  --bg-app: var(--palette-slate-50);
+  --bg-surface: var(--palette-white);
+  --bg-surface-hover: var(--palette-slate-50);
+  --bg-surface-muted: var(--palette-slate-100);
+  --bg-overlay: rgb(2 6 23 / 55%);
+
+  /* === Текст === */
+  --text-color-primary: var(--palette-slate-900);
+  --text-color-secondary: var(--palette-slate-600);
+  --text-color-muted: var(--palette-slate-500);
+  --text-color-inverted: var(--palette-white);
+
+  /* === Границы === */
+  --border-color-default: var(--palette-slate-200);
+  --border-color-strong: var(--palette-slate-300);
+  --border-color-focus: var(--palette-blue-500);
+  --border-color-error: var(--palette-red-500);
+
+  /* === Акцент === */
+  --color-accent: var(--palette-blue-600);
+  --color-accent-hover: var(--palette-blue-700);
+  --color-accent-active: var(--palette-blue-700);
+  --color-accent-soft: var(--palette-blue-50);
+  --color-accent-contrast: var(--palette-white);
+  --color-accent-border: var(--palette-blue-100);
+
+  /* === Семантические статусы === */
+  --color-success: var(--palette-emerald-600);
+  --color-success-soft: var(--palette-emerald-50);
+  --color-warning: var(--palette-amber-600);
+  --color-warning-soft: var(--palette-amber-50);
+  --color-danger: var(--palette-red-600);
+  --color-danger-soft: var(--palette-red-50);
+  --color-info: var(--palette-violet-600);
+  --color-info-soft: var(--palette-violet-50);
+
+  /* === Тени === */
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 8%), 0 4px 12px rgb(0 0 0 / 6%);
+  --shadow-card-hover: 0 4px 8px rgb(0 0 0 / 10%), 0 12px 24px rgb(0 0 0 / 8%);
+  --shadow-modal: 0 10px 40px rgb(0 0 0 / 20%);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* === Фоны === */
+  --bg-app: var(--palette-slate-900);
+  --bg-surface: var(--palette-slate-800);
+  --bg-surface-hover: var(--palette-slate-700);
+  --bg-surface-muted: var(--palette-slate-700);
+  --bg-overlay: rgb(2 6 23 / 70%);
+
+  /* === Текст === */
+  --text-color-primary: var(--palette-slate-100);
+  --text-color-secondary: var(--palette-slate-300);
+  --text-color-muted: var(--palette-slate-400);
+  --text-color-inverted: var(--palette-slate-900);
+
+  /* === Границы === */
+  --border-color-default: var(--palette-slate-700);
+  --border-color-strong: var(--palette-slate-600);
+  --border-color-focus: var(--palette-blue-500);
+  --border-color-error: var(--palette-red-500);
+
+  /* === Акцент === */
+  --color-accent: var(--palette-blue-500);
+  --color-accent-hover: var(--palette-blue-400);
+  --color-accent-active: var(--palette-blue-600);
+  --color-accent-soft: var(--palette-slate-800);
+  --color-accent-contrast: var(--palette-white);
+  --color-accent-border: var(--palette-blue-700);
+
+  /* === Семантические статусы === */
+  --color-success: var(--palette-emerald-500);
+  --color-success-soft: rgb(16 185 129 / 14%);
+  --color-warning: var(--palette-amber-400);
+  --color-warning-soft: rgb(245 158 11 / 14%);
+  --color-danger: var(--palette-red-500);
+  --color-danger-soft: rgb(239 68 68 / 14%);
+  --color-info: var(--palette-violet-400);
+  --color-info-soft: rgb(139 92 246 / 14%);
+
+  /* === Тени === */
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 40%);
+  --shadow-card-hover: 0 4px 12px rgb(0 0 0 / 50%);
+  --shadow-modal: 0 10px 40px rgb(0 0 0 / 60%);
+}
