@@ -3,7 +3,14 @@ import { useNavigate } from 'react-router-dom';
 
 import { QuestionStep } from './QuestionStep';
 import styles from './TakeTestTaker.module.css';
-import { clearStoredAnswers, readStoredAnswers, writeStoredAnswers } from '../model/attemptStorage';
+import {
+  clearStoredAnswers,
+  clearStoredDeadline,
+  readStoredAnswers,
+  readStoredDeadline,
+  writeStoredAnswers,
+  writeStoredDeadline,
+} from '../model/attemptStorage';
 import { buildAnswersPayload } from '../model/buildAnswers';
 import { useCountdown } from '../model/useCountdown';
 import { useSubmitAttemptMutation, type SubmitAttemptResult } from '@/entities/attempt';
@@ -30,6 +37,17 @@ export const TakeTestTaker = ({ test }: TakeTestTakerProps) => {
   );
   const [result, setResult] = useState<SubmitAttemptResult | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Восстанавливаем/создаём дедлайн один раз при маунте.
+  // Ответы переживают F5 через sessionStorage, поэтому и дедлайн храним там же —
+  // иначе перезагрузка «продлевала» бы таймер экзамена.
+  const [deadline] = useState<number>(() => {
+    const stored = readStoredDeadline(test.id);
+    if (stored && stored > Date.now()) return stored;
+    const fresh = Date.now() + test.timeLimit * 1000;
+    writeStoredDeadline(test.id, fresh);
+    return fresh;
+  });
 
   // Синхронизация черновика в sessionStorage на каждое изменение ответа.
   useEffect(() => {
@@ -81,6 +99,7 @@ export const TakeTestTaker = ({ test }: TakeTestTakerProps) => {
           answers: buildAnswersPayload(questions, answers),
         }).unwrap();
         clearStoredAnswers(test.id);
+        clearStoredDeadline(test.id);
         setResult(saved);
       } catch (error) {
         setSubmitError(getApiErrorMessage(error));
@@ -93,7 +112,7 @@ export const TakeTestTaker = ({ test }: TakeTestTakerProps) => {
     void doSubmit(true);
   }, [doSubmit]);
 
-  const { formatted, remaining } = useCountdown(test.timeLimit, handleExpire);
+  const { formatted, remaining } = useCountdown(deadline, handleExpire);
 
   const handleSelect = (optionIndex: number) => {
     if (!currentQuestion) return;

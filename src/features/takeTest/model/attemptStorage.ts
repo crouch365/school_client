@@ -29,3 +29,35 @@ export const clearStoredAnswers = (testId: number): void => {
     /* игнорируем */
   }
 };
+
+const deadlineKey = (testId: number): string => `attempt-deadline:${testId}`;
+
+/**
+ * Дедлайн (абсолютный epoch ms) прохождения теста в sessionStorage.
+ * Хранится отдельно от ответов, чтобы перезагрузка страницы НЕ продлевала
+ * таймер экзамена: восстановив дедлайн, таймер продолжит отсчёт от него.
+ */
+export const readStoredDeadline = (testId: number): number | null => {
+  try {
+    const raw = window.sessionStorage.getItem(deadlineKey(testId));
+    return raw ? Number(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
+export const writeStoredDeadline = (testId: number, deadline: number): void => {
+  try {
+    window.sessionStorage.setItem(deadlineKey(testId), String(deadline));
+  } catch {
+    /* sessionStorage недоступен — игнорируем */
+  }
+};
+
+export const clearStoredDeadline = (testId: number): void => {
+  try {
+    window.sessionStorage.removeItem(deadlineKey(testId));
+  } catch {
+    /* игнорируем */
+  }
+};

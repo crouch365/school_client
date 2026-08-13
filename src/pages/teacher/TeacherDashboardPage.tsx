@@ -46,7 +46,7 @@ export const TeacherDashboardPage = () => {
         </div>
 
         <TestGrid
-          tests={tests}
+          tests={tests.slice(0, 6)}
           isLoading={isFetching}
           emptyTitle="Тестов пока нет"
           emptyDescription="Создайте первый тест в разделе «Мои тесты»."

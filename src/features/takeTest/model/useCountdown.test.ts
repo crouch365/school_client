@@ -12,7 +12,7 @@ describe('useCountdown', () => {
   });
 
   it('уменьшает остаток каждую секунду', () => {
-    const { result } = renderHook(() => useCountdown(120));
+    const { result } = renderHook(() => useCountdown(Date.now() + 120 * 1000));
 
     expect(result.current.remaining).toBe(120);
     expect(result.current.formatted).toBe('2:00');
@@ -28,7 +28,7 @@ describe('useCountdown', () => {
   it('вызывает onExpire один раз по истечении времени', () => {
     const onExpire = jest.fn();
 
-    renderHook(() => useCountdown(3, onExpire));
+    renderHook(() => useCountdown(Date.now() + 3 * 1000, onExpire));
 
     act(() => {
       jest.advanceTimersByTime(4000);
@@ -40,7 +40,7 @@ describe('useCountdown', () => {
   it('не вызывает onExpire до истечения', () => {
     const onExpire = jest.fn();
 
-    const { result } = renderHook(() => useCountdown(10, onExpire));
+    const { result } = renderHook(() => useCountdown(Date.now() + 10 * 1000, onExpire));
 
     act(() => {
       jest.advanceTimersByTime(5000);

@@ -8,12 +8,16 @@ export interface CountdownResult {
 }
 
 /**
- * Обратный отсчёт на totalSeconds от момента монтирования.
+ * Обратный отсчёт от АБСОЛЮТНОГО дедлайна (epoch ms).
  * По истечении вызывается onExpire (один раз).
+ * Принимает именно deadline, а не длительность, чтобы перезагрузка страницы
+ * не «продлевала» таймер (см. TakeTestTaker + attemptStorage).
  */
-export const useCountdown = (totalSeconds: number, onExpire?: () => void): CountdownResult => {
-  const [remaining, setRemaining] = useState(totalSeconds);
-  const deadlineRef = useRef<number>(Date.now() + totalSeconds * 1000);
+export const useCountdown = (deadline: number, onExpire?: () => void): CountdownResult => {
+  const [remaining, setRemaining] = useState(() =>
+    Math.max(0, Math.ceil((deadline - Date.now()) / 1000)),
+  );
+  const deadlineRef = useRef<number>(deadline);
   const onExpireRef = useRef(onExpire);
 
   useEffect(() => {

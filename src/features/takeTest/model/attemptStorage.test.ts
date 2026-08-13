@@ -1,4 +1,11 @@
-import { clearStoredAnswers, readStoredAnswers, writeStoredAnswers } from './attemptStorage';
+import {
+  clearStoredAnswers,
+  clearStoredDeadline,
+  readStoredAnswers,
+  readStoredDeadline,
+  writeStoredAnswers,
+  writeStoredDeadline,
+} from './attemptStorage';
 
 describe('attemptStorage', () => {
   beforeEach(() => {
@@ -28,5 +35,32 @@ describe('attemptStorage', () => {
     clearStoredAnswers(7);
 
     expect(readStoredAnswers(7)).toBeNull();
+  });
+
+  describe('deadline', () => {
+    it('сохраняет и читает дедлайн', () => {
+      writeStoredDeadline(42, 2000);
+
+      expect(readStoredDeadline(42)).toBe(2000);
+    });
+
+    it('возвращает null, если дедлайна нет', () => {
+      expect(readStoredDeadline(999)).toBeNull();
+    });
+
+    it('изолирует дедлайны разных тестов', () => {
+      writeStoredDeadline(1, 1000);
+      writeStoredDeadline(2, 2000);
+
+      expect(readStoredDeadline(1)).toBe(1000);
+      expect(readStoredDeadline(2)).toBe(2000);
+    });
+
+    it('очищает дедлайн после сдачи', () => {
+      writeStoredDeadline(7, 3000);
+      clearStoredDeadline(7);
+
+      expect(readStoredDeadline(7)).toBeNull();
+    });
   });
 });
