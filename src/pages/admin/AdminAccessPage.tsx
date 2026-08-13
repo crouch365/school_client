@@ -4,10 +4,14 @@ import styles from './AdminAccessPage.module.css';
 import { useGetTestsQuery, type TestDto } from '@/entities/test';
 import { GrantAccessModal } from '@/features/grantAccess';
 import { formatDuration } from '@/shared/lib';
-import { Button, EmptyState, Skeleton } from '@/shared/ui';
+import { Button, EmptyState, Pagination, Skeleton } from '@/shared/ui';
 
 export const AdminAccessPage = () => {
-  const { data: tests, isFetching } = useGetTestsQuery();
+  const [page, setPage] = useState(1);
+  const { data, isFetching } = useGetTestsQuery({ page, limit: 20 });
+
+  const tests = data?.items ?? [];
+  const totalPages = data ? Math.max(1, Math.ceil(data.total / data.limit)) : 1;
   const [selectedTest, setSelectedTest] = useState<TestDto | null>(null);
 
   return (
@@ -41,6 +45,8 @@ export const AdminAccessPage = () => {
           ))}
         </div>
       )}
+
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
 
       <GrantAccessModal
         isOpen={selectedTest !== null}

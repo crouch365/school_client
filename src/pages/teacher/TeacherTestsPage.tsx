@@ -5,12 +5,16 @@ import styles from './TeacherTestsPage.module.css';
 import { useGetTestsQuery, type TestDto } from '@/entities/test';
 import { GrantAccessModal } from '@/features/grantAccess';
 import { TestFormModal } from '@/features/manageTest';
-import { Button } from '@/shared/ui';
+import { Button, Pagination } from '@/shared/ui';
 import { TestGrid } from '@/widgets/test';
 
 export const TeacherTestsPage = () => {
   const navigate = useNavigate();
-  const { data: tests, isFetching } = useGetTestsQuery();
+  const [page, setPage] = useState(1);
+  const { data, isFetching } = useGetTestsQuery({ page, limit: 20 });
+
+  const tests = data?.items ?? [];
+  const totalPages = data ? Math.max(1, Math.ceil(data.total / data.limit)) : 1;
 
   const [isCreateOpen, setCreateOpen] = useState(false);
   const [accessTest, setAccessTest] = useState<TestDto | null>(null);
@@ -23,7 +27,7 @@ export const TeacherTestsPage = () => {
       </div>
 
       <TestGrid
-        tests={tests ?? []}
+        tests={tests}
         isLoading={isFetching}
         emptyTitle="Тестов пока нет"
         emptyDescription="Создайте свой первый тест."
@@ -45,6 +49,8 @@ export const TeacherTestsPage = () => {
           </>
         )}
       />
+
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
 
       <TestFormModal
         isOpen={isCreateOpen}

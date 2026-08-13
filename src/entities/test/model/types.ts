@@ -24,6 +24,14 @@ export interface SafeTestDto {
   questions: SafeQuestionDto[];
 }
 
+/** Ответ списка тестов: пагинация (контракт как у UsersPage). */
+export interface TestsPage {
+  items: TestDto[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 export interface CreateTestPayload {
   subject: string;
   title: string;

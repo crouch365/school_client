@@ -4,8 +4,9 @@ import { createRoot } from 'react-dom/client';
 import { App } from '@/app/App';
 import { ErrorBoundary } from '@/app/providers/ErrorBoundary';
 import { StoreProvider } from '@/app/providers/StoreProvider';
-import { ToastProvider } from '@/shared/ui';
 import { setMockModeActive } from '@/mocks/flag';
+import { IS_DEV } from '@/shared/config/env';
+import { ToastProvider } from '@/shared/ui';
 
 import '@/app/styles/index.css';
 
@@ -37,9 +38,13 @@ const startMocks = async (): Promise<void> => {
 
 /**
  * Bootstrap API:
- *  - VITE_USE_MOCKS=true  -> всегда моки;
+ *  - VITE_USE_MOCKS=true  -> всегда моки (dev-режим);
  *  - VITE_USE_MOCKS=off   -> всегда реальный сервер;
- *  - иначе (auto)         -> если сервер недоступен, включаются моки.
+ *  - иначе (auto, ТОЛЬКО в dev) -> если сервер недоступен, включаются моки.
+ *
+ * В production auto-режим невозможен: при недоступном бэкенде приложение
+ * получает обычный error-стейт RTK Query (error.status === 'FETCH_ERROR'),
+ * а не подменяет данные фейковыми моками.
  */
 const bootstrapApi = async (): Promise<void> => {
   const mode = (import.meta.env.VITE_USE_MOCKS as string | undefined) ?? 'auto';
@@ -48,7 +53,7 @@ const bootstrapApi = async (): Promise<void> => {
     await startMocks();
     return;
   }
-  if (mode === 'off') return;
+  if (mode === 'off' || !IS_DEV) return;
 
   const reachable = await isServerReachable();
   if (!reachable) {

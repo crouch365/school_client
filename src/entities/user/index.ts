@@ -15,6 +15,7 @@ export {
   selectSessionToken,
   selectSessionUser,
 } from './model/sessionSlice';
+export { buildSessionUser } from './model/lib';
 export {
   userApi,
   useGetUsersQuery,

@@ -1,7 +1,8 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import type { SessionUser, UserRole } from './types';
-import { decodeJwt, storage } from '@/shared/lib';
+import { buildSessionUser } from './lib';
+import type { SessionUser } from './types';
+import { storage } from '@/shared/lib';
 
 interface SessionState {
   token: string | null;
@@ -12,21 +13,13 @@ const readInitialSession = (): SessionState => {
   const token = storage.getToken();
   if (!token) return { token: null, user: null };
 
-  const payload = decodeJwt(token);
-  if (!payload) {
+  const user = buildSessionUser(token);
+  if (!user) {
     storage.clearToken();
     return { token: null, user: null };
   }
 
-  return {
-    token,
-    user: {
-      id: payload.id,
-      email: payload.email,
-      role: payload.role as UserRole,
-      className: payload.className ?? null,
-    },
-  };
+  return { token, user };
 };
 
 const initialState: SessionState = readInitialSession();

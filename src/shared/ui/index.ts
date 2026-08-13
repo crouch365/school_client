@@ -9,5 +9,6 @@ export { Alert, type AlertProps, type AlertVariant } from './Alert';
 export { Spinner, type SpinnerProps } from './Spinner';
 export { Skeleton, type SkeletonProps } from './Skeleton';
 export { EmptyState, type EmptyStateProps } from './EmptyState';
+export { Pagination, type PaginationProps } from './Pagination';
 export { ToastProvider, useToast, type ToastType } from './Toast';
 export { AccessDeniedModal, type AccessDeniedModalProps } from './AccessDeniedModal';

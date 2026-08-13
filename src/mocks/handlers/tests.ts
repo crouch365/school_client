@@ -26,8 +26,16 @@ export const testHandlers = [
     const user = requireUser(request);
     if (!user) return forbidden('Не передан токен авторизации');
 
+    const url = new URL(request.url);
+    const page = Math.max(1, Number(url.searchParams.get('page')) || 1);
+    const limit = Math.max(1, Number(url.searchParams.get('limit')) || 20);
+
+    let items: typeof tests = [];
+
     if (user.role === 'STUDENT') {
-      if (!user.className) return HttpResponse.json([]);
+      if (!user.className) {
+        return HttpResponse.json({ items: [], total: 0, page, limit });
+      }
 
       const openTestIds = new Set(
         accesses
@@ -35,21 +43,25 @@ export const testHandlers = [
           .map((access) => access.testId),
       );
 
-      return HttpResponse.json(
-        tests
-          .filter((test) => openTestIds.has(test.id))
-          .map((test) => ({ ...test, questions: safeQuestions(test.id) })),
-      );
+      items = tests
+        .filter((test) => openTestIds.has(test.id))
+        .map((test) => ({ ...test, questions: safeQuestions(test.id) }));
+    } else {
+      const ownedTests =
+        user.role === 'TEACHER'
+          ? tests.filter((test) => test.teacherId === user.id)
+          : tests;
+      items = ownedTests.map((test) => ({ ...test, questions: fullQuestions(test.id) }));
     }
 
-    const ownedTests =
-      user.role === 'TEACHER'
-        ? tests.filter((test) => test.teacherId === user.id)
-        : tests;
+    const start = (page - 1) * limit;
 
-    return HttpResponse.json(
-      ownedTests.map((test) => ({ ...test, questions: fullQuestions(test.id) })),
-    );
+    return HttpResponse.json({
+      items: items.slice(start, start + limit),
+      total: items.length,
+      page,
+      limit,
+    });
   }),
 
   /* ================= GET /tests/:testId ================= */

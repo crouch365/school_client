@@ -6,11 +6,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './LoginForm.module.css';
 import { loginSchema, type LoginFormValues } from '../model/loginSchema';
 import { useAppDispatch } from '@/app/providers/store';
-import { sessionActions, useLoginMutation, type SessionUser } from '@/entities/user';
-import { decodeJwt, getApiErrorMessage, storage, type JwtPayloadShape } from '@/shared/lib';
+import { buildSessionUser, sessionActions, useLoginMutation, type UserRole } from '@/entities/user';
+import { getApiErrorMessage, storage } from '@/shared/lib';
 import { Alert, Button, Input } from '@/shared/ui';
 
-const ROLE_HOME: Record<JwtPayloadShape['role'], string> = {
+const ROLE_HOME: Record<UserRole, string> = {
   ADMIN: '/admin',
   TEACHER: '/teacher',
   STUDENT: '/student',
@@ -35,24 +35,17 @@ export const LoginForm = () => {
 
     try {
       const { token } = await login(values).unwrap();
-      const payload = decodeJwt(token);
+      const sessionUser = buildSessionUser(token);
 
-      if (!payload) {
+      if (!sessionUser) {
         throw new Error('Не удалось прочитать данные пользователя из токена');
       }
-
-      const sessionUser: SessionUser = {
-        id: payload.id,
-        email: payload.email,
-        role: payload.role,
-        className: payload.className ?? null,
-      };
 
       storage.setToken(token);
       dispatch(sessionActions.sessionSet({ token, user: sessionUser }));
 
       const from = (location.state as { from?: string } | null)?.from;
-      navigate(from ?? ROLE_HOME[payload.role], { replace: true });
+      navigate(from ?? ROLE_HOME[sessionUser.role], { replace: true });
     } catch (error) {
       setFormError(getApiErrorMessage(error));
     }

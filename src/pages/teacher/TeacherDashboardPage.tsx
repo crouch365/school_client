@@ -9,16 +9,23 @@ import { TestGrid } from '@/widgets/test';
 
 export const TeacherDashboardPage = () => {
   const navigate = useNavigate();
-  const { data: tests, isFetching } = useGetTestsQuery();
+  // Дашборд тянет первую страницу (до 100 тестов) для статистики и «Последних тестов».
+  // Количество тестов берём из data.total (полное по всем страницам), а вот
+  // вопросы/предметы считаются по первой сотне — точный подсчёт требует
+  // отдельного stats-эндпоинта (вне текущего скоупа).
+  const { data, isFetching } = useGetTestsQuery({ page: 1, limit: 100 });
+
+  const tests = data?.items ?? [];
 
   const stats = useMemo(() => {
-    const allTests = tests ?? [];
+    const items = data?.items ?? [];
+
     return {
-      testsCount: allTests.length,
-      questionsCount: allTests.reduce((count, test) => count + (test.questions?.length ?? 0), 0),
-      subjectsCount: new Set(allTests.map((test) => test.subject)).size,
+      testsCount: data?.total ?? items.length,
+      questionsCount: items.reduce((count, test) => count + (test.questions?.length ?? 0), 0),
+      subjectsCount: new Set(items.map((test) => test.subject)).size,
     };
-  }, [tests]);
+  }, [data]);
 
   return (
     <div className={styles.page}>
@@ -39,7 +46,7 @@ export const TeacherDashboardPage = () => {
         </div>
 
         <TestGrid
-          tests={tests ?? []}
+          tests={tests}
           isLoading={isFetching}
           emptyTitle="Тестов пока нет"
           emptyDescription="Создайте первый тест в разделе «Мои тесты»."

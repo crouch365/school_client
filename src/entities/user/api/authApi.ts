@@ -1,3 +1,4 @@
+import type { SessionUser } from '../model/types';
 import { baseApi } from '@/shared/api/baseApi';
 
 export interface LoginPayload {
@@ -18,7 +19,7 @@ export const authApi = baseApi.injectEndpoints({
      * Валидация токена при старте приложения.
      * Вернёт { token, user } только при живом токене.
      */
-    checkAuth: build.query<{ token: string; user: LoginResult }, void>({
+    checkAuth: build.query<{ token: string; user: SessionUser }, void>({
       query: () => '/auth/check',
     }),
   }),

@@ -1,8 +1,9 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { QuestionStep } from './QuestionStep';
 import styles from './TakeTestTaker.module.css';
+import { clearStoredAnswers, readStoredAnswers, writeStoredAnswers } from '../model/attemptStorage';
 import { buildAnswersPayload } from '../model/buildAnswers';
 import { useCountdown } from '../model/useCountdown';
 import { useSubmitAttemptMutation, type SubmitAttemptResult } from '@/entities/attempt';
@@ -24,9 +25,29 @@ export const TakeTestTaker = ({ test }: TakeTestTakerProps) => {
   const [submitAttempt, { isLoading }] = useSubmitAttemptMutation();
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, number>>({});
+  const [answers, setAnswers] = useState<Record<number, number>>(
+    () => readStoredAnswers(test.id) ?? {},
+  );
   const [result, setResult] = useState<SubmitAttemptResult | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Синхронизация черновика в sessionStorage на каждое изменение ответа.
+  useEffect(() => {
+    writeStoredAnswers(test.id, answers);
+  }, [test.id, answers]);
+
+  // Предупреждение браузера при закрытии/перезагрузке вкладки с непустым черновиком.
+  useEffect(() => {
+    if (Object.keys(answers).length === 0) return;
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [answers]);
 
   const questions = useMemo<SafeQuestionDto[]>(
     () => (test.questions ?? []) as SafeQuestionDto[],
@@ -59,6 +80,7 @@ export const TakeTestTaker = ({ test }: TakeTestTakerProps) => {
           testId: test.id,
           answers: buildAnswersPayload(questions, answers),
         }).unwrap();
+        clearStoredAnswers(test.id);
         setResult(saved);
       } catch (error) {
         setSubmitError(getApiErrorMessage(error));

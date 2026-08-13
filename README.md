@@ -30,15 +30,19 @@ npm run build      # tsc -b && vite build
 
 ## Мок-режим (MSW)
 
-Фронтенд умеет работать без бэкенда — включится автоматически, если сервер недоступен.
+Фронтенд умеет работать без бэкенда. В dev (import.meta.env.DEV) моки
+включаются автоматически, если сервер недоступен. В production авто-переход
+на моки невозможен: при недоступном бэкенде отображается обычный error-стейт
+RTK Query (`error.status === 'FETCH_ERROR'`).
 
 | `VITE_USE_MOCKS` | Поведение |
 |---|---|
-| не задано (auto) | health-check `/api/auth/check`; сервер недоступен → включаются моки |
+| не задано (auto) | health-check `/api/auth/check`; сервер недоступен → моки (только в dev) |
 | `true` | моки всегда |
-| `off` | только реальный сервер |
+| `off` | только реальный сервер (по умолчанию, см. `.env.example`) |
 
 ```bash
+cp .env.example .env   # затем при желании: VITE_USE_MOCKS=true npm run dev
 VITE_USE_MOCKS=true npm run dev
 ```
 

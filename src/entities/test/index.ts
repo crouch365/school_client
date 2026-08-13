@@ -1,11 +1,13 @@
 export {
   type TestDto,
   type SafeTestDto,
+  type TestsPage,
   type CreateTestPayload,
   type UpdateTestPayload,
 } from './model/types';
 export {
   testApi,
+  type GetTestsArgs,
   useGetTestsQuery,
   useGetTestByIdQuery,
   useCreateTestMutation,

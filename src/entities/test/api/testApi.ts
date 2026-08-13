@@ -1,10 +1,18 @@
-import type { CreateTestPayload, TestDto, UpdateTestPayload } from '../model/types';
+import type { CreateTestPayload, TestDto, TestsPage, UpdateTestPayload } from '../model/types';
 import { baseApi } from '@/shared/api/baseApi';
+
+export interface GetTestsArgs {
+  page?: number;
+  limit?: number;
+}
 
 export const testApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    getTests: build.query<TestDto[], void>({
-      query: () => '/tests',
+    getTests: build.query<TestsPage, GetTestsArgs>({
+      query: ({ page = 1, limit = 20 } = {}) => ({
+        url: '/tests',
+        params: { page, limit },
+      }),
       providesTags: [{ type: 'Test', id: 'LIST' }],
     }),
     getTestById: build.query<TestDto, number>({

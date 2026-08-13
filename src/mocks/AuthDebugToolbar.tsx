@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import { useAppDispatch } from '@/app/providers/store';
-import { sessionActions, type SessionUser } from '@/entities/user';
+import { buildSessionUser, sessionActions } from '@/entities/user';
 import { storage } from '@/shared/lib';
 import { Button } from '@/shared/ui';
 
@@ -25,14 +25,9 @@ export const AuthDebugToolbar = () => {
   const navigate = useNavigate();
 
   const switchUser = (role: (typeof DEMO_ROLES)[number]) => {
-    const payload = DEMO_PAYLOADS[role];
-    const token = signMockToken(payload);
-    const sessionUser: SessionUser = {
-      id: payload.id,
-      email: payload.email,
-      role: payload.role,
-      className: payload.className ?? null,
-    };
+    const token = signMockToken(DEMO_PAYLOADS[role]);
+    const sessionUser = buildSessionUser(token);
+    if (!sessionUser) return;
 
     storage.setToken(token);
     dispatch(sessionActions.sessionSet({ token, user: sessionUser }));
