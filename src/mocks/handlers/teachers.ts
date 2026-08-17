@@ -1,9 +1,8 @@
 import { http, HttpResponse } from 'msw';
 
-import { API_URL } from '@/shared/config/env';
-
 import { teacherClasses, teacherSubjects, users } from '../db';
 import { isRole, requireUser } from '../helpers';
+import { API_URL } from '@/shared/config/env';
 
 const findTeacher = (teacherId: number) => {
   const teacher = users.find(
@@ -12,11 +11,9 @@ const findTeacher = (teacherId: number) => {
   return teacher ?? null;
 };
 
-const forbidden = () =>
-  HttpResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
+const forbidden = () => HttpResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
 
-const notFound = (message: string) =>
-  HttpResponse.json({ message }, { status: 404 });
+const notFound = (message: string) => HttpResponse.json({ message }, { status: 404 });
 
 export const teacherHandlers = [
   http.get(`${API_URL}/teachers/:teacherId`, ({ request, params }) => {
@@ -50,9 +47,7 @@ export const teacherHandlers = [
     const teacherId = Number(params.teacherId);
     if (user.role !== 'ADMIN' && user.id !== teacherId) return forbidden();
 
-    return HttpResponse.json(
-      teacherClasses.filter((link) => link.teacherId === teacherId),
-    );
+    return HttpResponse.json(teacherClasses.filter((link) => link.teacherId === teacherId));
   }),
 
   http.post(`${API_URL}/teachers/:teacherId/classes`, async ({ request, params }) => {
@@ -65,10 +60,7 @@ export const teacherHandlers = [
     const body = (await request.json()) as { className?: string };
     const className = body.className?.trim();
     if (!className) {
-      return HttpResponse.json(
-        { message: 'className обязателен' },
-        { status: 400 },
-      );
+      return HttpResponse.json({ message: 'className обязателен' }, { status: 400 });
     }
 
     const exists = teacherClasses.some(
@@ -78,10 +70,7 @@ export const teacherHandlers = [
       teacherClasses.push({ teacherId, className });
     }
 
-    return HttpResponse.json(
-      { teacherId, className },
-      { status: exists ? 200 : 201 },
-    );
+    return HttpResponse.json({ teacherId, className }, { status: exists ? 200 : 201 });
   }),
 
   http.delete(`${API_URL}/teachers/:teacherId/classes/:className`, ({ request, params }) => {
@@ -107,9 +96,7 @@ export const teacherHandlers = [
     const teacherId = Number(params.teacherId);
     if (user.role !== 'ADMIN' && user.id !== teacherId) return forbidden();
 
-    return HttpResponse.json(
-      teacherSubjects.filter((link) => link.teacherId === teacherId),
-    );
+    return HttpResponse.json(teacherSubjects.filter((link) => link.teacherId === teacherId));
   }),
 
   http.post(`${API_URL}/teachers/:teacherId/subjects`, async ({ request, params }) => {
@@ -130,10 +117,7 @@ export const teacherHandlers = [
     );
     if (!exists) teacherSubjects.push({ teacherId, subject });
 
-    return HttpResponse.json(
-      { teacherId, subject },
-      { status: exists ? 200 : 201 },
-    );
+    return HttpResponse.json({ teacherId, subject }, { status: exists ? 200 : 201 });
   }),
 
   http.delete(`${API_URL}/teachers/:teacherId/subjects/:subject`, ({ request, params }) => {

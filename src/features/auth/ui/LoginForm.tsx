@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './LoginForm.module.css';
 import { loginSchema, type LoginFormValues } from '../model/loginSchema';
 import { useAppDispatch } from '@/app/providers/store';
-import { buildSessionUser, sessionActions, useLoginMutation, type UserRole } from '@/entities/user';
+import { authApi, sessionActions, useLoginMutation, type UserRole } from '@/entities/user';
 import { getApiErrorMessage, storage } from '@/shared/lib';
 import { Alert, Button, Input } from '@/shared/ui';
 
@@ -34,19 +34,21 @@ export const LoginForm = () => {
     setFormError(null);
 
     try {
+      // 1. Логин: сервер возвращает только токен («билет»).
       const { token } = await login(values).unwrap();
-      const sessionUser = buildSessionUser(token);
-
-      if (!sessionUser) {
-        throw new Error('Не удалось прочитать данные пользователя из токена');
-      }
-
       storage.setToken(token);
-      dispatch(sessionActions.sessionSet({ token, user: sessionUser }));
+      dispatch(sessionActions.sessionTokenSet(token));
+
+      // 2. Роль берём с сервера через /auth/check, а не из payload JWT.
+      const session = await dispatch(authApi.endpoints.checkAuth.initiate()).unwrap();
+      dispatch(sessionActions.sessionUserSet(session.user));
 
       const from = (location.state as { from?: string } | null)?.from;
-      navigate(from ?? ROLE_HOME[sessionUser.role], { replace: true });
+      navigate(from ?? ROLE_HOME[session.user.role], { replace: true });
     } catch (error) {
+      // Логин не удался, либо токен не прошёл проверку сервера — чистим сессию.
+      storage.clearToken();
+      dispatch(sessionActions.sessionCleared());
       setFormError(getApiErrorMessage(error));
     }
   });

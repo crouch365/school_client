@@ -12,10 +12,7 @@ describe('Input', () => {
   it('показывает текст ошибки', () => {
     render(<Input label="Email" error="Некорректный email" />);
     expect(screen.getByRole('alert')).toHaveTextContent('Некорректный email');
-    expect(screen.getByLabelText('Email')).toHaveAttribute(
-      'aria-invalid',
-      'true',
-    );
+    expect(screen.getByLabelText('Email')).toHaveAttribute('aria-invalid', 'true');
   });
 
   it('передаёт значение в onChange', async () => {

@@ -6,20 +6,26 @@ import { selectSessionToken, sessionActions, useCheckAuthQuery } from '@/entitie
 /**
  * Один валидационный запрос /auth/check при старте приложения.
  *
- * 401 уже обрабатывается глобально в baseApi (очистка токена + редирект на /login),
- * здесь лишь синхронно чистим сессию в сторе. Сетевые ошибки (FETCH_ERROR)
- * НЕ разлогинивают — сервер может быть временно недоступен.
+ * - Успех: подтверждает роль данными с сервера (а не из JWT) ->
+ *   dispatch(sessionUserSet). Роль теперь берётся из ответа сервера.
+ * - 401: сбрасываем токен (это делает baseApi) и чистим сессию;
+ *   редирект на /login делает RequireAuth.
+ * Сетевые ошибки (FETCH_ERROR) НЕ разлогинивают — сервер может быть
+ * временно недоступен.
  */
 export const SessionVerifier = () => {
   const token = useAppSelector(selectSessionToken);
   const dispatch = useAppDispatch();
-  const { isError, error } = useCheckAuthQuery(undefined, { skip: !token });
+  const { data, isError, error } = useCheckAuthQuery(undefined, { skip: !token });
 
   useEffect(() => {
+    if (data) {
+      dispatch(sessionActions.sessionUserSet(data.user));
+    }
     if (isError && error && 'status' in error && error.status === 401) {
       dispatch(sessionActions.sessionCleared());
     }
-  }, [dispatch, isError, error]);
+  }, [dispatch, data, isError, error]);
 
   return null;
 };

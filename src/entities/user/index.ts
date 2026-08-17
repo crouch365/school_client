@@ -14,6 +14,7 @@ export {
   sessionActions,
   selectSessionToken,
   selectSessionUser,
+  selectSessionStatus,
 } from './model/sessionSlice';
 export { buildSessionUser } from './model/lib';
 export {

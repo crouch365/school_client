@@ -1,18 +1,15 @@
 import { http, HttpResponse } from 'msw';
 
-import { API_URL } from '@/shared/config/env';
-
 import { accesses, attempts, counters, questions, tests } from '../db';
 import { isRole, requireUser } from '../helpers';
+import { API_URL } from '@/shared/config/env';
 
 const forbidden = (message = 'Недостаточно прав') =>
   HttpResponse.json({ message }, { status: 403 });
 
-const notFound = (message: string) =>
-  HttpResponse.json({ message }, { status: 404 });
+const notFound = (message: string) => HttpResponse.json({ message }, { status: 404 });
 
-const badRequest = (message: string) =>
-  HttpResponse.json({ message }, { status: 400 });
+const badRequest = (message: string) => HttpResponse.json({ message }, { status: 400 });
 
 const testSummary = (testId: number) => {
   const test = tests.find((candidate) => candidate.id === testId);
@@ -36,10 +33,7 @@ export const resultHandlers = [
     if (!user.className) return forbidden('Вам не назначен класс');
 
     const hasAccess = accesses.some(
-      (access) =>
-        access.testId === test.id &&
-        access.className === user.className &&
-        access.isOpen,
+      (access) => access.testId === test.id && access.className === user.className && access.isOpen,
     );
     if (!hasAccess) {
       return forbidden('Доступ к этому тесту закрыт или не назначен вашему классу');
@@ -47,8 +41,7 @@ export const resultHandlers = [
 
     const answers = body.answers ?? [];
     let attempt = attempts.find(
-      (candidate) =>
-        candidate.studentId === user.id && candidate.testId === test.id,
+      (candidate) => candidate.studentId === user.id && candidate.testId === test.id,
     );
 
     if (!attempt) {
@@ -70,9 +63,7 @@ export const resultHandlers = [
       return badRequest('Тест уже сдан, повторная попытка недоступна');
     }
 
-    const elapsedSeconds = Math.floor(
-      (Date.now() - new Date(attempt.startedAt).getTime()) / 1000,
-    );
+    const elapsedSeconds = Math.floor((Date.now() - new Date(attempt.startedAt).getTime()) / 1000);
     if (elapsedSeconds > test.timeLimit) {
       attempt.status = 'EXPIRED';
       return badRequest(
@@ -82,9 +73,7 @@ export const resultHandlers = [
 
     const testQuestions = questions.filter((question) => question.testId === test.id);
     if (answers.length !== testQuestions.length) {
-      return badRequest(
-        'Количество ответов не совпадает с количеством вопросов',
-      );
+      return badRequest('Количество ответов не совпадает с количеством вопросов');
     }
 
     const questionMap = new Map(testQuestions.map((question) => [question.id, question]));
@@ -101,9 +90,7 @@ export const resultHandlers = [
         answer.optionIndex < 0 ||
         answer.optionIndex >= question.options.length
       ) {
-        return badRequest(
-          `Некорректный optionIndex для вопроса id=${answer.questionId}`,
-        );
+        return badRequest(`Некорректный optionIndex для вопроса id=${answer.questionId}`);
       }
       if (answer.optionIndex === question.correctOptionIndex) score++;
       normalizedAnswers.push(answer.optionIndex);
@@ -134,9 +121,7 @@ export const resultHandlers = [
         ...attempt,
         test: testSummary(attempt.testId),
       }))
-      .sort((a, b) =>
-        (b.finishedAt ?? '').localeCompare(a.finishedAt ?? ''),
-      );
+      .sort((a, b) => (b.finishedAt ?? '').localeCompare(a.finishedAt ?? ''));
 
     return HttpResponse.json(myAttempts);
   }),
@@ -156,9 +141,7 @@ export const resultHandlers = [
     const testAttempts = attempts
       .filter((attempt) => attempt.testId === testId)
       .map((attempt) => ({ ...attempt, test: testSummary(attempt.testId) }))
-      .sort((a, b) =>
-        (b.finishedAt ?? '').localeCompare(a.finishedAt ?? ''),
-      );
+      .sort((a, b) => (b.finishedAt ?? '').localeCompare(a.finishedAt ?? ''));
 
     return HttpResponse.json(testAttempts);
   }),

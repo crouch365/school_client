@@ -15,6 +15,25 @@ jest.mock('@/entities/user', () => {
   return {
     ...actual,
     useLoginMutation: () => [mockLogin, { isLoading: false }],
+    authApi: {
+      endpoints: {
+        // Роль теперь приходит с сервера через /auth/check.
+        checkAuth: {
+          initiate: jest.fn(() => () => ({
+            unwrap: () =>
+              Promise.resolve({
+                token: 'mock.token',
+                user: {
+                  id: 1,
+                  email: 'qwe.edfffff@school.local',
+                  role: 'ADMIN',
+                  className: null,
+                },
+              }),
+          })),
+        },
+      },
+    },
   };
 });
 
@@ -72,9 +91,7 @@ describe('LoginForm', () => {
     await user.click(screen.getByRole('button', { name: 'Войти' }));
 
     expect(await screen.findByText('Введите email')).toBeInTheDocument();
-    expect(
-      screen.getByText('Пароль должен содержать не менее 6 символов'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Пароль должен содержать не менее 6 символов')).toBeInTheDocument();
     expect(mockLogin).not.toHaveBeenCalled();
   });
 
@@ -87,9 +104,7 @@ describe('LoginForm', () => {
     await user.type(screen.getByLabelText('Пароль'), 'wrongpass');
     await user.click(screen.getByRole('button', { name: 'Войти' }));
 
-    expect(
-      await screen.findByText('Неверный email или пароль'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Неверный email или пароль')).toBeInTheDocument();
   });
 
   it('успешно логинится, сохраняет токен и редиректит по роли', async () => {

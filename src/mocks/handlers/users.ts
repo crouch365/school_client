@@ -1,9 +1,8 @@
 import { http, HttpResponse } from 'msw';
 
-import { API_URL } from '@/shared/config/env';
-
 import { counters, users } from '../db';
 import { isRole, requireUser } from '../helpers';
+import { API_URL } from '@/shared/config/env';
 
 const listUsers = () => users.map(({ password, ...user }) => user);
 
@@ -82,7 +81,8 @@ export const userHandlers = [
     if (typeof body.lastName === 'string') target.lastName = body.lastName;
     if (body.role === 'ADMIN' || body.role === 'TEACHER' || body.role === 'STUDENT') {
       target.role = body.role;
-      target.className = body.role === 'STUDENT' ? (body.className as string | null) ?? null : null;
+      target.className =
+        body.role === 'STUDENT' ? ((body.className as string | null) ?? null) : null;
     } else if (typeof body.className === 'string' || body.className === null) {
       target.className = body.className;
     }
@@ -112,8 +112,6 @@ const requireAdmin = (request: Request) => {
   return isRole(user, 'ADMIN') ? user : null;
 };
 
-const forbidden = () =>
-  HttpResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
+const forbidden = () => HttpResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
 
-const notFound = (message: string) =>
-  HttpResponse.json({ message }, { status: 404 });
+const notFound = (message: string) => HttpResponse.json({ message }, { status: 404 });

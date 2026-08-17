@@ -1,12 +1,11 @@
 import { useNavigate } from 'react-router-dom';
+import styles from './AuthDebugToolbar.module.css';
+import { DEMO_PAYLOADS, signMockToken } from './token';
 
 import { useAppDispatch } from '@/app/providers/store';
 import { buildSessionUser, sessionActions } from '@/entities/user';
 import { storage } from '@/shared/lib';
 import { Button } from '@/shared/ui';
-
-import { DEMO_PAYLOADS, signMockToken } from './token';
-import styles from './AuthDebugToolbar.module.css';
 
 const ROLE_HOME = {
   ADMIN: '/admin',
@@ -38,12 +37,7 @@ export const AuthDebugToolbar = () => {
     <div className={styles.toolbar}>
       <span className={styles.label}>🧪 Mock API</span>
       {DEMO_ROLES.map((role) => (
-        <Button
-          key={role}
-          variant="secondary"
-          size="sm"
-          onClick={() => switchUser(role)}
-        >
+        <Button key={role} variant="secondary" size="sm" onClick={() => switchUser(role)}>
           {role}
         </Button>
       ))}

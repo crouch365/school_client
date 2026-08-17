@@ -13,7 +13,8 @@ export const TeacherTestsPage = () => {
   const [page, setPage] = useState(1);
   const { data, isFetching } = useGetTestsQuery({ page, limit: 20 });
 
-  const tests = data?.items ?? [];
+  const tests = data ?? [];
+
   const totalPages = data ? Math.max(1, Math.ceil(data.total / data.limit)) : 1;
 
   const [isCreateOpen, setCreateOpen] = useState(false);

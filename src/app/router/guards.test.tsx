@@ -2,10 +2,9 @@ import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-import { sessionActions, type SessionUser } from '@/entities/user';
-import { createTestStore } from '@/test/test-utils';
-
 import { RequireAuth, RequireRole } from './guards';
+import { createTestStore } from '../../test/test-utils';
+import { sessionActions, type SessionUser } from '@/entities/user';
 
 const adminUser: SessionUser = {
   id: 1,

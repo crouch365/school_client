@@ -2,8 +2,14 @@ import type { ReactNode } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import { useAppSelector } from '@/app/providers/store';
-import { selectSessionToken, selectSessionUser, type UserRole } from '@/entities/user';
+import {
+  selectSessionStatus,
+  selectSessionToken,
+  selectSessionUser,
+  type UserRole,
+} from '@/entities/user';
 import { AccessDeniedModal } from '@/shared/ui';
+import { PageLoader } from '@/widgets/layout';
 
 export const RequireAuth = ({ children }: { children: ReactNode }) => {
   const token = useAppSelector(selectSessionToken);
@@ -18,7 +24,13 @@ export const RequireAuth = ({ children }: { children: ReactNode }) => {
 
 export const RequireRole = ({ roles, children }: { roles: UserRole[]; children: ReactNode }) => {
   const user = useAppSelector(selectSessionUser);
+  const status = useAppSelector(selectSessionStatus);
   const navigate = useNavigate();
+
+  // Роль ещё подтверждается сервером (/auth/check) — не показываем «Нет доступа».
+  if (status === 'checking') {
+    return <PageLoader />;
+  }
 
   const isAllowed = Boolean(user && roles.includes(user.role));
 
@@ -40,9 +52,15 @@ export const RequireRole = ({ roles, children }: { roles: UserRole[]; children: 
 export const RedirectByRole = () => {
   const token = useAppSelector(selectSessionToken);
   const user = useAppSelector(selectSessionUser);
+  const status = useAppSelector(selectSessionStatus);
 
-  if (!token || !user) {
+  if (!token) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Токен есть, но роль ещё не подтверждена сервером — ждём.
+  if (status === 'checking' || !user) {
+    return <PageLoader />;
   }
 
   const target =

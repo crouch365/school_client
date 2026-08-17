@@ -14,10 +14,7 @@ interface ErrorBoundaryState {
  * Глобальный предохранитель: при любой ошибке рендера
  * показывает экран «Что-то пошло не так» с перезагрузкой.
  */
-export class ErrorBoundary extends Component<
-  ErrorBoundaryProps,
-  ErrorBoundaryState
-> {
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = { hasError: false };
 
   static getDerivedStateFromError(): ErrorBoundaryState {
@@ -41,14 +38,9 @@ export class ErrorBoundary extends Component<
           </div>
           <h1 className={styles.title}>Что-то пошло не так</h1>
           <p className={styles.text}>
-            Произошла непредвиденная ошибка. Попробуйте перезагрузить
-            приложение.
+            Произошла непредвиденная ошибка. Попробуйте перезагрузить приложение.
           </p>
-          <button
-            type="button"
-            className={styles.button}
-            onClick={this.handleReload}
-          >
+          <button type="button" className={styles.button} onClick={this.handleReload}>
             Перезагрузить приложение
           </button>
         </div>

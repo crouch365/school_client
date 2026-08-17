@@ -1,18 +1,15 @@
 import { http, HttpResponse } from 'msw';
 
-import { API_URL } from '@/shared/config/env';
-
 import { accesses, counters, questions, teacherSubjects, tests } from '../db';
 import { isRole, requireUser } from '../helpers';
+import { API_URL } from '@/shared/config/env';
 
 const forbidden = (message = 'Недостаточно прав') =>
   HttpResponse.json({ message }, { status: 403 });
 
-const notFound = (message: string) =>
-  HttpResponse.json({ message }, { status: 404 });
+const notFound = (message: string) => HttpResponse.json({ message }, { status: 404 });
 
-const badRequest = (message: string) =>
-  HttpResponse.json({ message }, { status: 400 });
+const badRequest = (message: string) => HttpResponse.json({ message }, { status: 400 });
 
 const fullQuestions = (testId: number) =>
   questions.filter((question) => question.testId === testId);
@@ -48,9 +45,7 @@ export const testHandlers = [
         .map((test) => ({ ...test, questions: safeQuestions(test.id) }));
     } else {
       const ownedTests =
-        user.role === 'TEACHER'
-          ? tests.filter((test) => test.teacherId === user.id)
-          : tests;
+        user.role === 'TEACHER' ? tests.filter((test) => test.teacherId === user.id) : tests;
       items = ownedTests.map((test) => ({ ...test, questions: fullQuestions(test.id) }));
     }
 
@@ -78,14 +73,10 @@ export const testHandlers = [
       }
       const hasAccess = accesses.some(
         (access) =>
-          access.testId === test.id &&
-          access.className === user.className &&
-          access.isOpen,
+          access.testId === test.id && access.className === user.className && access.isOpen,
       );
       if (!hasAccess) {
-        return forbidden(
-          'Доступ к этому тесту закрыт или не назначен вашему классу',
-        );
+        return forbidden('Доступ к этому тесту закрыт или не назначен вашему классу');
       }
       return HttpResponse.json({
         id: test.id,
@@ -122,8 +113,7 @@ export const testHandlers = [
       return badRequest('Некорректные данные теста');
     }
 
-    const teacherId =
-      user.role === 'ADMIN' ? (body.teacherId ?? user.id) : user.id;
+    const teacherId = user.role === 'ADMIN' ? (body.teacherId ?? user.id) : user.id;
 
     if (user.role === 'TEACHER') {
       const teaches = teacherSubjects.some(
@@ -215,8 +205,7 @@ export const testHandlers = [
     if (user.role === 'TEACHER' && test.teacherId !== user.id) return forbidden();
 
     const index = questions.findIndex(
-      (question) =>
-        question.id === Number(params.questionId) && question.testId === test.id,
+      (question) => question.id === Number(params.questionId) && question.testId === test.id,
     );
     if (index === -1) return notFound('Вопрос не найден');
 

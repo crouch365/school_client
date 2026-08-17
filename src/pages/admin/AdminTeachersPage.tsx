@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import styles from './AdminTeachersPage.module.css';
 import { useGetUsersQuery, type TeacherProfile } from '@/entities/user';
 import { AssignTeacherModal } from '@/features/assignTeacher';
-import { Badge, Button, EmptyState, Skeleton } from '@/shared/ui';
+import { Button, EmptyState, Skeleton } from '@/shared/ui';
 
 export const AdminTeachersPage = () => {
   const { data, isFetching } = useGetUsersQuery({ page: 1, limit: 100 });
@@ -47,9 +47,9 @@ export const AdminTeachersPage = () => {
                 </div>
                 <div className={styles.itemEmail}>{teacher.email}</div>
               </div>
-              <Badge variant="accent">
+              {/* <Badge variant="accent">
                 {teacher.className ? `Класс: ${teacher.className}` : 'Без класса'}
-              </Badge>
+              </Badge> */}
               <Button variant="secondary" size="sm" onClick={() => openAssignModal(teacher)}>
                 Классы и предметы
               </Button>

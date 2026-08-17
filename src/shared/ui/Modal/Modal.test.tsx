@@ -39,9 +39,7 @@ describe('Modal', () => {
 
     render(<Modal isOpen onClose={onClose} title="Окно" />);
 
-    const overlay = document.querySelector(
-      `.${styles.overlay}`,
-    ) as HTMLElement;
+    const overlay = document.querySelector(`.${styles.overlay}`) as HTMLElement;
     fireEvent.mouseDown(overlay);
     expect(onClose).toHaveBeenCalledTimes(1);
   });

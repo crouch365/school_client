@@ -51,7 +51,7 @@ export const AssignTeacherModal = ({ isOpen, teacher, onClose }: AssignTeacherMo
     if (isOpen) {
       classForm.reset({ value: '' });
       subjectForm.reset({ value: '' });
-      setFormError(null);
+      // setFormError(null);
     }
   }, [isOpen, classForm, subjectForm]);
 

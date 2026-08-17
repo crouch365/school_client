@@ -3,6 +3,8 @@ export interface JwtPayloadShape {
   email: string;
   role: 'ADMIN' | 'TEACHER' | 'STUDENT';
   className?: string | null;
+  exp?: number;
+  iat?: number;
 }
 
 /**
@@ -29,5 +31,15 @@ const base64UrlToJson = <T>(segment: string): T | null => {
 export const decodeJwt = <T extends JwtPayloadShape>(token: string): T | null => {
   const [, payload] = token.split('.');
   if (!payload) return null;
-  return base64UrlToJson<T>(payload);
+
+  const decoded = base64UrlToJson<T>(payload);
+  if (!decoded) return null;
+
+  // Проверка срока жизни токена по exp (секунды с эпохи).
+  // Просроченный токен считаем невалидным/отсутствующим.
+  if (decoded.exp && Date.now() >= decoded.exp * 1000) {
+    return null;
+  }
+
+  return decoded;
 };

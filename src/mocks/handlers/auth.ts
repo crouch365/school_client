@@ -1,11 +1,11 @@
 import { http, HttpResponse } from 'msw';
 
-import { decodeJwt } from '@/shared/lib';
+import { users } from '../db';
+import { requireUser } from '../helpers';
+import { signMockToken } from '../token';
 import { API_URL } from '@/shared/config/env';
 
-import { users } from '../db';
-import { signMockToken } from '../token';
-import { requireUser } from '../helpers';
+import { decodeJwt } from '@/shared/lib';
 
 export const authHandlers = [
   http.post(`${API_URL}/auth/login`, async ({ request }) => {
@@ -15,16 +15,11 @@ export const authHandlers = [
     };
 
     const user = users.find(
-      (candidate) =>
-        candidate.email === body.email &&
-        candidate.password === body.password,
+      (candidate) => candidate.email === body.email && candidate.password === body.password,
     );
 
     if (!user) {
-      return HttpResponse.json(
-        { message: 'Неверный email или пароль' },
-        { status: 401 },
-      );
+      return HttpResponse.json({ message: 'Неверный email или пароль' }, { status: 401 });
     }
 
     return HttpResponse.json({
@@ -40,18 +35,12 @@ export const authHandlers = [
   http.get(`${API_URL}/auth/check`, ({ request }) => {
     const token = readBearerToken(request);
     if (!token) {
-      return HttpResponse.json(
-        { message: 'Не передан токен авторизации' },
-        { status: 401 },
-      );
+      return HttpResponse.json({ message: 'Не передан токен авторизации' }, { status: 401 });
     }
 
     const payload = decodeJwt(token);
     if (!payload) {
-      return HttpResponse.json(
-        { message: 'Токен недействителен' },
-        { status: 401 },
-      );
+      return HttpResponse.json({ message: 'Токен недействителен' }, { status: 401 });
     }
 
     return HttpResponse.json({

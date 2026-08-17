@@ -23,4 +23,14 @@ describe('buildSessionUser', () => {
     expect(buildSessionUser('not-a-jwt')).toBeNull();
     expect(buildSessionUser('')).toBeNull();
   });
+
+  it('возвращает null для просроченного токена (exp в прошлом)', () => {
+    const expired = signMockToken({ ...DEMO_PAYLOADS.STUDENT, exp: 1 });
+    expect(buildSessionUser(expired)).toBeNull();
+  });
+
+  it('собирает SessionUser из токена с живым exp в будущем', () => {
+    const fresh = signMockToken({ ...DEMO_PAYLOADS.STUDENT, exp: 2 ** 31 });
+    expect(buildSessionUser(fresh)).toEqual(DEMO_PAYLOADS.STUDENT);
+  });
 });

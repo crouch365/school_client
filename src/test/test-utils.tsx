@@ -17,8 +17,7 @@ export const createTestStore = () =>
       session: sessionReducer,
       ui: uiReducer,
     },
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(baseApi.middleware),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(baseApi.middleware),
   });
 
 export type TestStore = ReturnType<typeof createTestStore>;

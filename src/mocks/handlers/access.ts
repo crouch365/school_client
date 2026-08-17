@@ -8,8 +8,7 @@ import { isRole, requireUser } from '../helpers';
 const forbidden = (message = 'Недостаточно прав') =>
   HttpResponse.json({ message }, { status: 403 });
 
-const notFound = (message: string) =>
-  HttpResponse.json({ message }, { status: 404 });
+const notFound = (message: string) => HttpResponse.json({ message }, { status: 404 });
 
 const resolveAccessBody = async (request: Request) => {
   const body = (await request.json()) as {
@@ -22,18 +21,13 @@ const resolveAccessBody = async (request: Request) => {
   };
 };
 
-const canManage = (
-  payload: { role: string; id: number },
-  test: { teacherId: number },
-) =>
-  payload.role === 'ADMIN' ||
-  (payload.role === 'TEACHER' && test.teacherId === payload.id);
+const canManage = (payload: { role: string; id: number }, test: { teacherId: number }) =>
+  payload.role === 'ADMIN' || (payload.role === 'TEACHER' && test.teacherId === payload.id);
 
 const setup = {
   grant: {
     message: (className: string) => `Доступ для класса ${className} открыт`,
-    apply: (access?: { isOpen: boolean }) =>
-      access === undefined || !access.isOpen,
+    apply: (access?: { isOpen: boolean }) => access === undefined || !access.isOpen,
   },
   revoke: {
     message: (className: string) => `Доступ для класса ${className} закрыт`,
@@ -51,20 +45,14 @@ export const accessHandlers = [
   }),
 ];
 
-const handleAccess = async (
-  kind: 'grant' | 'revoke',
-  request: Request,
-): Promise<Response> => {
+const handleAccess = async (kind: 'grant' | 'revoke', request: Request): Promise<Response> => {
   const payload = requireUser(request);
   if (!payload) return forbidden('Не передан токен авторизации');
   if (!isRole(payload, 'ADMIN', 'TEACHER')) return forbidden();
 
   const { testId, className } = await resolveAccessBody(request);
   if (!Number.isInteger(testId) || !className) {
-    return HttpResponse.json(
-      { message: 'Не переданы testId или className' },
-      { status: 400 },
-    );
+    return HttpResponse.json({ message: 'Не переданы testId или className' }, { status: 400 });
   }
 
   const test = tests.find((candidate) => candidate.id === testId);

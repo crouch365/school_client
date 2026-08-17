@@ -24,7 +24,11 @@ describe('Button', () => {
     const user = userEvent.setup();
     const onClick = jest.fn();
 
-    render(<Button disabled onClick={onClick}>Отключено</Button>);
+    render(
+      <Button disabled onClick={onClick}>
+        Отключено
+      </Button>,
+    );
 
     await user.click(screen.getByRole('button', { name: 'Отключено' }));
     expect(onClick).not.toHaveBeenCalled();
@@ -32,9 +36,7 @@ describe('Button', () => {
 
   it('применяет variant danger', () => {
     render(<Button variant="danger">Удалить</Button>);
-    expect(screen.getByRole('button', { name: 'Удалить' })).toHaveClass(
-      'danger',
-    );
+    expect(screen.getByRole('button', { name: 'Удалить' })).toHaveClass('danger');
   });
 
   it('передаёт type="submit" по запросу', () => {

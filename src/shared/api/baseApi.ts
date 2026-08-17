@@ -6,6 +6,7 @@ import {
   type FetchBaseQueryError,
 } from '@reduxjs/toolkit/query/react';
 
+import { sessionActions } from '@/entities/user';
 import { API_URL } from '@/shared/config/env';
 import { storage } from '@/shared/lib';
 import { uiActions } from '@/shared/ui/model/uiSlice';
@@ -29,6 +30,8 @@ const getErrorMessage = (error: FetchBaseQueryError): string => {
 
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: API_URL,
+  // важно: cookies поедут (задел под будущий refresh-токен)
+  credentials: 'include',
   prepareHeaders: (headers) => {
     const token = storage.getToken();
     if (token) {
@@ -39,24 +42,52 @@ const rawBaseQuery = fetchBaseQuery({
 });
 
 /**
+ * Включить, когда бэкенд добавит /auth/refresh.
+ * Пока false — 401 сбрасывает сессию без повторного запроса.
+ */
+const REFRESH_SUPPORTED = false;
+
+/**
  * Глобальная обёртка над fetch-запросами:
- *  - 401 (кроме /auth/login) -> сброс токена + редирект на /login;
+ *  - 401 (кроме /auth/login) -> пробуем refresh; если его нет/не удался — сбрасываем сессию.
+ *    РЕДИРЕКТА здесь нет: сброс токена видит RequireAuth и сам делает <Navigate to="/login">.
  *  - 403 -> глобальная модалка «Нет доступа к данному ресурсу».
  */
-const baseQueryWithInterceptors: BaseQueryFn<
-  string | FetchArgs,
-  unknown,
-  FetchBaseQueryError
-> = async (args, api, extraOptions) => {
-  const result = await rawBaseQuery(args, api, extraOptions);
+const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
+  args,
+  api,
+  extraOptions,
+) => {
+  let result = await rawBaseQuery(args, api, extraOptions);
 
   if (result.error) {
     const isLoginRequest = typeof args === 'object' && args.url === '/auth/login';
 
+    // 401 — пробуем refresh (когда бэк добавит /auth/refresh)
     if (result.error.status === 401 && !isLoginRequest) {
+      if (REFRESH_SUPPORTED) {
+        const refreshResult = await rawBaseQuery(
+          { url: '/auth/refresh', method: 'POST' }, // или GET — как решит бэк
+          api,
+          extraOptions,
+        );
+
+        if (
+          refreshResult.data &&
+          typeof refreshResult.data === 'object' &&
+          'token' in refreshResult.data
+        ) {
+          const newToken = (refreshResult.data as { token: string }).token;
+          storage.setToken(newToken);
+          // повторяем исходный запрос
+          result = await rawBaseQuery(args, api, extraOptions);
+          return result;
+        }
+      }
+
+      // Refresh не удался / его ещё нет
       storage.clearToken();
-      window.location.assign('/login');
-      return result;
+      api.dispatch(sessionActions.sessionCleared());
     }
 
     if (result.error.status === 403) {
@@ -69,7 +100,7 @@ const baseQueryWithInterceptors: BaseQueryFn<
 
 export const baseApi = createApi({
   reducerPath: 'api',
-  baseQuery: baseQueryWithInterceptors,
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['User', 'Test', 'Question', 'Attempt', 'Access', 'Teacher'],
   endpoints: () => ({}),
 });
